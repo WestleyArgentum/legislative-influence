@@ -17,7 +17,7 @@ function catcodes_from_orgs(orgs)
     (unique(support), unique(oppose))
 end
 
-function contributions_for_catcodes(codes::Array, contrib_table::Array)
+function contributions_for_catcodes(contrib_table::Array, codes::Array)
     contribs = Any[]
 
     for code in codes
@@ -27,5 +27,9 @@ function contributions_for_catcodes(codes::Array, contrib_table::Array)
        end
     end
 
-    unique(contribs)
+    contribs
+end
+
+function contributions_for_catcodes(contrib_table::Array, codes::(Array, Array))
+    (contributions_for_catcodes(contrib_table, codes[1]), contributions_for_catcodes(contrib_table, codes[2]))
 end
