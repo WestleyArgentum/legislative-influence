@@ -3,21 +3,33 @@ using JSON
 using SunlightAPIs
 using MapLight
 
-keys = readcsv("api-keys.csv")
+function setup_global_keys(keyfile = "api-keys.csv")
+    keys = readcsv(keyfile)
 
-for i in 1:first(size(keys))
-    keyname = strip(keys[i, 1])
-    key = strip(keys[i, 2])
+    for i in 1:first(size(keys))
+        keyname = strip(keys[i, 1])
+        key = strip(keys[i, 2])
 
-    keyname == "maplight" && (global maplight_key = key)
-    keyname == "sunlight" && (global sunlight_key = key)
+        keyname == "maplight" && (global maplight_key = key)
+        keyname == "sunlight" && (global sunlight_key = key)
+        keyname == "nyt-campaign-finance" && (global nyt_cf_key = key)
+        keyname == "nyt-congress" && (global nyt_congress_key = key)
+        keyname == "nyt-districts" && (global nyt_districts_key = key)
+    end
 end
 
-(!isdefined(:sunlight_key) || !isdefined(:maplight_key)) && error("api-keys.csv must provide sunlight and maplight keys!")
+# -------
 
-att_sunlight_id = "d473e580c5684a658b754eb97566cb05"
+function contributions_for_catcodes(codes::Array, contrib_table::Array)
+    contribs = Any[]
 
-att_bills = bills(sunlight_key, att_sunlight_id; cycle = 2012)
+    for code in codes
+        for i in 1:first(size(contrib_table))
+         if contrib_table[i, 7] == "|$code|"
+           push!(contribs, contrib_table[i, 5])
+         end
+       end
+    end
 
-positions_on_att_bills = [ bill_positions(maplight_key, "us", bill["congress_no"], bill["bill_type"], bill["bill_no"]) for bill in att_bills ]
-
+    contribs
+end
