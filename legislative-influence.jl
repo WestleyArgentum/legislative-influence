@@ -20,16 +20,23 @@ end
 
 # -------
 
+function catcodes_from_bill(bill)
+    catcodes_from_orgs(bill["bill"]["organizations"])
+end
+
+function catcodes_from_orgs(orgs)
+    [ org["catcode"] for org in orgs ]
+end
+
 function contributions_for_catcodes(codes::Array, contrib_table::Array)
     contribs = Any[]
 
     for code in codes
+        os_code = "|$code|"
         for i in 1:first(size(contrib_table))
-         if contrib_table[i, 7] == "|$code|"
-           push!(contribs, contrib_table[i, 5])
-         end
+            contrib_table[i, 7] == os_code && push!(contribs, contrib_table[i, 5])
        end
     end
 
-    contribs
+    unique(contribs)
 end
