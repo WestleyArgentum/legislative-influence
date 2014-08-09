@@ -1,5 +1,8 @@
 
-function setup_api_keys(keyfile = "api-keys.csv")
+const _DEFAULT_API_KEYS_PATH = joinpath(dirname(@__FILE__), "api-keys.csv")
+
+
+function setup_api_keys(keyfile = _DEFAULT_API_KEYS_PATH)
     keys = readcsv(keyfile)
 
     for i in 1:first(size(keys))
