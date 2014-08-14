@@ -1,5 +1,6 @@
 
 using MapLight
+using DataFrames
 
 
 function catcodes_from_bill(bill)
@@ -21,8 +22,12 @@ function contributions_for_catcodes(contribs::DataFrame, codes::Array)
     contribs[Bool[ !DataFrames.isna(c) && c in codes for c in contribs[:RealCode] ], :]
 end
 
-function contributions_for_crp_ids(contribs::DataFrame, crp_ids::Array)
+function pac_contributions_for_crp_ids(contribs::DataFrame, crp_ids::Array)
     contribs[Bool[ !DataFrames.isna(c) && c in crp_ids for c in contribs[:CID] ], :]
+end
+
+function individual_contributions_for_crp_ids(contribs::DataFrame, crp_ids::Array)
+    contribs[Bool[ !DataFrames.isna(c) && c in house_ids for c in contribs[:RecipID] ], :]
 end
 
 # this really needs to be brought into a NYT.jl
